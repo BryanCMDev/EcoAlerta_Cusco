@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoAlerta Cusco v1.2 | Monitoreo Ambiental</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>🌿 EcoAlerta Cusco <span class="version-badge">v1.2</span></h1>
+            <p>Mapa ciudadano de alertas ambientales</p>
+            <div class="hero-actions">
+                <span id="sessionBadge" class="session-badge hidden"></span>
+                <button type="button" id="btnRole" class="btn-role hidden">Cambiar de vista / Salir</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <h2>Selecciona tu tipo de acceso</h2>
+            <p class="instruction">Versión 1.2 · Elige cómo deseas ingresar a la plataforma.</p>
+
+            <div class="role-options">
+                <button type="button" id="btnUser" class="role-btn">
+                    👤 Usuario
+                    <small>Ver el mapa de alertas y contactar por WhatsApp</small>
+                </button>
+                <button type="button" id="btnAdmin" class="role-btn admin">
+                    🛡️ Administrador
+                    <small>Registrar, editar y eliminar alertas</small>
+                </button>
+            </div>
+
+            <form id="adminLoginForm" class="admin-login hidden">
+                <h3>Acceso de administrador</h3>
+                <label for="adminPassword">Contraseña:</label>
+                <input type="password" id="adminPassword" placeholder="Ingresa la contraseña" autocomplete="current-password">
+                <p id="loginError" class="login-error hidden">Contraseña incorrecta. Inténtalo de nuevo.</p>
+                <button type="submit" class="btn-submit">Ingresar como Administrador</button>
+                <button type="button" id="btnCancelAdmin" class="btn-secondary">Volver</button>
+            </form>
+        </div>
+    </section>
+
+    <main id="appContainer" class="app-container hidden">
+        <aside id="sidebarPanel" class="form-panel hidden">
+            <div id="adminPanel">
+                <h2>Panel de Administrador</h2>
+                <p class="instruction">Registra nuevas alertas o edita las existentes. Para cambiar la ubicación, haz clic en el mapa mientras editas.</p>
+
+                <div class="admin-toolbar">
+                    <button type="button" id="btnNewReport" class="btn-secondary">+ Nueva alerta</button>
+                </div>
+
+                <form id="editForm" class="hidden">
+                    <h3 id="editFormTitle">Editar alerta</h3>
+
+                    <div class="form-group">
+                        <label for="editDistrict">Distrito / Zona:</label>
+                        <select id="editDistrict" required>
+                            <option value="">Selecciona una zona...</option>
+                            <option value="Lucre (Huacarpay)">Lucre (Huacarpay)</option>
+                            <option value="Cusco (Centro)">Cusco (Centro histórico)</option>
+                            <option value="San Jerónimo">San Jerónimo</option>
+                            <option value="San Sebastián">San Sebastián</option>
+                            <option value="Wanchaq">Wanchaq</option>
+                            <option value="Valle Sagrado">Valle Sagrado</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group coordinates-group">
+                        <input type="text" id="editLat" placeholder="Latitud" readonly required>
+                        <input type="text" id="editLng" placeholder="Longitud" readonly required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editDescription">Descripción del problema:</label>
+                        <textarea id="editDescription" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editSeverity">Nivel de Gravedad:</label>
+                        <select id="editSeverity" required>
+                            <option value="rojo">🔴 Crítico (Alta contaminación)</option>
+                            <option value="amarillo">🟡 Moderado (Basura dispersa)</option>
+                            <option value="verde">🟢 Zona Recuperada (Limpio)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Guardar cambios</button>
+                        <button type="button" id="btnCancelEdit" class="btn-secondary">Cancelar</button>
+                    </div>
+                </form>
+
+                <div id="adminList" class="admin-list"></div>
+            </div>
+
+            <div class="stats">
+                <h3>Estadísticas de Alertas</h3>
+                <ul id="reportStats"></ul>
+            </div>
+        </aside>
+
+        <section class="map-panel">
+            <div id="map"></div>
+            <div class="map-legend">
+                <span><i class="legend-dot" style="background:#e53935"></i> Crítico</span>
+                <span><i class="legend-dot" style="background:#fdd835"></i> Moderado</span>
+                <span><i class="legend-dot" style="background:#43a047"></i> Recuperado</span>
+            </div>
+        </section>
+    </main>
+
+    <section id="whatsappSection" class="whatsapp-section hidden">
+        <div class="whatsapp-card">
+            <img class="whatsapp-logo" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/960px-WhatsApp.svg.png?utm_source=es.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Logo de WhatsApp">
+            <div class="whatsapp-text">
+                <h2>¿Viste basura en tu zona?</h2>
+                <p>Escríbenos por WhatsApp y cuéntanos dónde está el punto de contaminación. Nuestro equipo administrativo lo registrará en el mapa.</p>
+                <a class="whatsapp-btn" href="https://wa.me/51929701094" target="_blank" rel="noopener">
+                    Escríbenos: +51 929 701 094
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
