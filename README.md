@@ -41,7 +41,7 @@ Este proyecto no requiere instalación de dependencias, Node.js ni bases de dato
 
 1. **Clona este repositorio:**
 ```bash
-git clone https://github.com/TU_USUARIO/ecoalerta-cusco.git
+git clone https://github.com/BryanCMDev/ecoalerta-cusco.git
 
 ```
 
