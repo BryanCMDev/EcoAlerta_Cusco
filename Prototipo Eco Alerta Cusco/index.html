@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoAlerta Cusco | Monitoreo Ambiental</title>
+    <!-- CSS de Leaflet para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sección Superior: Explicación de la Empresa -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>🌿 EcoAlerta Cusco</h1>
+            <p>Plataforma ciudadana de Monitoreo y Acción Ambiental</p>
+        </div>
+    </header>
+
+    <section class="about">
+        <h2>¿Cómo funciona?</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <h3>1. Reporte 📱</h3>
+                <p>La comunidad identifica contaminación en espacios naturales y lo reporta gratis.</p>
+            </div>
+            <div class="step-card">
+                <h3>2. Monitoreo 🗺️</h3>
+                <p>Clasificamos los puntos: 🔴 Crítico, 🟡 Moderado, 🟢 Recuperado en nuestro mapa.</p>
+            </div>
+            <div class="step-card">
+                <h3>3. Acción ♻️</h3>
+                <p>Ofrecemos servicios, capacitaciones y campañas con los datos recopilados para recuperar Cusco.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Principal: Sistema de Mapa y Formulario -->
+    <main class="app-container">
+        <!-- Panel Izquierdo: Formulario -->
+        <aside class="form-panel">
+            <h2>Registrar Nuevo Reporte</h2>
+            <p class="instruction">Haz clic en el mapa para obtener la ubicación exacta.</p>
+            
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="district">Distrito / Zona:</label>
+                    <select id="district" required>
+                        <option value="">Selecciona una zona...</option>
+                        <option value="Lucre (Huacarpay)">Lucre (Huacarpay)</option>
+                        <option value="Cusco (Centro)">Cusco (Centro histórico)</option>
+                        <option value="San Jerónimo">San Jerónimo</option>
+                        <option value="San Sebastián">San Sebastián</option>
+                        <option value="Wanchaq">Wanchaq</option>
+                        <option value="Valle Sagrado">Valle Sagrado</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <div class="form-group coordinates-group">
+                    <input type="text" id="lat" placeholder="Latitud" readonly required>
+                    <input type="text" id="lng" placeholder="Longitud" readonly required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descripción del problema:</label>
+                    <textarea id="description" rows="3" placeholder="Ej: Acumulación de plásticos cerca a la orilla..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="severity">Nivel de Gravedad:</label>
+                    <select id="severity" required>
+                        <option value="rojo">🔴 Crítico (Alta contaminación)</option>
+                        <option value="amarillo">🟡 Moderado (Basura dispersa)</option>
+                        <option value="verde">🟢 Zona Recuperada (Limpio)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Guardar Reporte en el Mapa</button>
+            </form>
+
+            <div class="stats">
+                <h3>Estadísticas de Reportes</h3>
+                <ul id="reportStats">
+                    <!-- Generado por JS -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Panel Derecho: Mapa interactivo -->
+        <section class="map-panel">
+            <div id="map"></div>
+        </section>
+    </main>
+
+    <!-- JS de Leaflet y nuestro script -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
